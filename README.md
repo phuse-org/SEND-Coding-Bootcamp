@@ -1,5 +1,7 @@
 # SEND-Coding-Bootcamp
 * Use Posit Cloud as environment for training (users have to setup a free account)
+* Intro RStudio
+* Intro Slides
 * Body Weight Graph
   * Motivating Example:
     * Plot y = BW, x = DY, by SETCD/SEX

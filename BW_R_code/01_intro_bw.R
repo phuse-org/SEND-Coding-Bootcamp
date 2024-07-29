@@ -10,27 +10,37 @@
 
 # load from library
 library(haven)
-library(dplyr)
-library(ggplot2)
-library(RColorBrewer)
-library(scales)
+# library(dplyr)
+# library(ggplot2)
+# library(RColorBrewer)
+# library(scales)
 
 # read xpt file with haven package
 
 bw <- haven::read_xpt("~/OneDrive - FDA/yousuf/10_DATA/Biocelerate_shared_data/data/biocelerate_all_data/1MDogA_send/bw.xpt")
 ## bw <- haven::read_xpt("data/mock_SEND_data/instem/bw.xpt")
+# write to csv file
+# read back the file in dataframe
+# attribute (label) lost
+# mention to read excel file
 
 # convert to base R dataframe
 bw <- as.data.frame(bw)
-
+edit(bw)
 # getting a peek at data
 head(bw)
 
 # View the whole table
 View(bw)
-
+# edit()
 # know more about your dataframe/table
 str(bw)
+
+print(head(bw$BWSTRESN))
+head(bw$BWSTRESN)
+print(bw[[1]])
+print(bw[['BWSTRESN']])
+bw[1:5,]
 
 # access one column
 bw$USUBJID
@@ -67,10 +77,11 @@ summary(bw$BWSTRESN)
 is.na(bw$BWSTRESN)
 sum(is.na(bw$BWSTRESN))
 
-
 # plot
 # plot a single numeric variable/column
 plot(bw$BWSTRESN)
+
+###################################
 
 # individual values of body weight
 plot(bw$BWSTRESN)
@@ -79,11 +90,11 @@ plot(bw$BWSTRESN)
 ## plot(bw$BWSTRESN, pch = 21, col='black')
 ## ## plot(bw$BWSTRESN, pch = 1, col='black')
 ## plot(bw$BWSTRESN, pch = 2, col='black')
-plot(bw$BWSTRESN, pch = 19, col='red')
+plot(bw$BWSTRESN, pch = 17, col='red')
 
-plot(bw$BWSTRESN,col='red',
-     main = 'scatter plot for  BWSTRESN',
-     xlab = '',
+  plot(bw$BWSTRESN,col='red',
+       main = 'scatter plot for  BWSTRESN',
+       xlab = '',
      ylab = 'BWSTRESN')
 
 unique(bw$BWTESTCD)
