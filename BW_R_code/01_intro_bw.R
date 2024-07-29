@@ -13,10 +13,12 @@ library(haven)
 library(dplyr)
 library(ggplot2)
 library(RColorBrewer)
+library(scales)
 
 # read xpt file with haven package
 
 bw <- haven::read_xpt("~/OneDrive - FDA/yousuf/10_DATA/Biocelerate_shared_data/data/biocelerate_all_data/1MDogA_send/bw.xpt")
+## bw <- haven::read_xpt("data/mock_SEND_data/instem/bw.xpt")
 
 # convert to base R dataframe
 bw <- as.data.frame(bw)
@@ -74,10 +76,10 @@ plot(bw$BWSTRESN)
 plot(bw$BWSTRESN)
 # pch= plotting character
 # col = color
-plot(bw$BWSTRESN, pch = 21, col='black')
-## plot(bw$BWSTRESN, pch = 1, col='black')
+## plot(bw$BWSTRESN, pch = 21, col='black')
+## ## plot(bw$BWSTRESN, pch = 1, col='black')
 ## plot(bw$BWSTRESN, pch = 2, col='black')
-## plot(bw$BWSTRESN, pch = 19, col='black')
+plot(bw$BWSTRESN, pch = 19, col='red')
 
 plot(bw$BWSTRESN,col='red',
      main = 'scatter plot for  BWSTRESN',
@@ -86,6 +88,7 @@ plot(bw$BWSTRESN,col='red',
 
 unique(bw$BWTESTCD)
 plot(bw$BWSTRESN,col=ifelse(bw$BWTESTCD=='BW','skyblue','red'),pch = 19)
+legend('topright',legend =  c('BW','TERMBW'), col=c('skyblue','red'),pch = 19)
 ## plot(bw$BWSTRESN,col=ifelse(bw$BWTESTCD=='BW','skyblue','red'),pch = 17)
 ## plot(bw$BWSTRESN,col=ifelse(bw$BWTESTCD=='BW','skyblue','red'),pch = 18)
 
@@ -116,6 +119,7 @@ barplot(table(bw$BWTESTCD))
 ##   ggplot2::geom_point()
 
 dm <- haven::read_xpt("~/OneDrive - FDA/yousuf/10_DATA/Biocelerate_shared_data/data/biocelerate_all_data/1MDogA_send/dm.xpt")
+## dm <- haven::read_xpt("data/mock_SEND_data/instem/dm.xpt")
 ## dm <- haven::read_xpt('../../data/PDS/dm.xpt')
 dm  <- as.data.frame(dm)
 head(dm)
@@ -157,8 +161,6 @@ legend('right',legend = c('M','F'),pch = c(18,19))
 
 
 # better color
-library(RColorBrewer)
-library(scales)
 RColorBrewer::display.brewer.all()
 RColorBrewer::display.brewer.all(7,select = 'Spectral')
 ## show_col(scales::pal_hue()(9))
@@ -186,7 +188,7 @@ colors_cus <- scales::hue_pal()(7)
 scales::show_col(colors_cus)
 plot(df_merge$VISITDY,df_merge$BWSTRESN,
      col = colors_cus[df_merge$SETCD],
-     pch = ifelse(df_merge$SEX=='M',16,17))
+     pch = ifelse(df_merge$SEX=='M',16,17),cex=0.8)
 legend('bottomright',legend = levels(df_merge$SETCD),
        col = colors_cus,
        pch = 16)
@@ -234,32 +236,46 @@ plot(df_mean$VISITDY,df_mean$mean_bw,col = cl[df_mean$SETCD],
      pch = c(16,17)[df_mean$SEX],
      xlab = 'VISITDY',
      ylab = 'Mean Body Weight')
-## lines(col_ord_df$VISITDY,col_ord_df$BWSTRESN_mean, col = factor(col_ord_df$SETCD))
 legend('bottomright',legend = levels(df_mean$SETCD),
        col = cl, pch = 19,cex = .8)
 legend('right',legend =levels(df_mean$SEX) , pch = c(16,17),cex = .8)
 #########
 
-## plot(df_mean$VISITDY,df_mean$mean_bw,col = cl[df_mean$SETCD],
-##      pch = c(16,17)[df_mean$SEX],
-##      xlab = 'VISITDY',
-##      ylab = 'Mean Body Weight')
+#   line graph
+#   ###############################
+#
+df_plot <- df_mean[, c('VISITDY','SEX','SETCD','mean_bw')]
+df_plot$mean_bw  <- round(df_plot$mean_bw,digits = 2)
+dim(df_plot)
+new_df <- df_plot[!duplicated(df_plot),]
+dim(new_df)
+df_mean <- new_df
 
-## legend('bottomright',legend = levels(df_mean$SETCD),
-##        col = cl, pch = 19,cex = .8)
-## legend('right',legend =levels(df_mean$SEX) , pch = c(16,17),cex = .8)
+cl <- scales::pal_hue()(7)
+df_mean$SETCD <- factor(df_mean$SETCD)
+df_mean$SEX <- factor(df_mean$SEX)
+plot(df_mean$VISITDY,df_mean$mean_bw,col = cl[df_mean$SETCD],
+     pch = c(16,17)[df_mean$SEX],
+     xlab = 'VISITDY',
+     ylab = 'Mean Body Weight')
+legend('bottomright',legend = levels(df_mean$SETCD),
+       col = cl, pch = 19,cex = .8)
+legend('right',legend =levels(df_mean$SEX) , pch = c(16,17),cex = .8)
+#########
 
-## set_codes <- unique(df_mean$SETCD)
-## sex_uniq <- unique(df_mean$SEX)
-## for (i in 1:length(set_codes)) {
-##   for (j in 1:length(sex_uniq)){
-## subs <- df_mean[df_mean$SETCD==set_codes[i] & df_mean$SEX==sex_uniq[j],]
-## ## lines(subs$VISITDY,subs$BWSTRESN_mean, col = cl[i])
-## lines(subs$VISITDY,subs$mean_bw,type = 'o')
+set_codes <- unique(df_mean$SETCD)
+sex_uniq <- unique(df_mean$SEX)
+for (i in 1:length(set_codes)) {
+  for (j in 1:length(sex_uniq)){
+subs <- df_mean[df_mean$SETCD==set_codes[i] & df_mean$SEX==sex_uniq[j],]
+## lines(subs$VISITDY,subs$BWSTRESN_mean, col = cl[i])
+lines(subs$VISITDY,subs$mean_bw,col = cl[i])
 
 
-##   }
-## }
+  }
+}
+
+##############
 
 # ggplot2
 ggplot2::ggplot(data = df_mean, ggplot2::aes(x=VISITDY,y=mean_bw,color=SETCD,shape=SEX))+
