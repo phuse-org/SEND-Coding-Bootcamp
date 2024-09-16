@@ -17,8 +17,7 @@ library(haven)
 
 # read xpt file with haven package
 
-bw <- haven::read_xpt("~/OneDrive - FDA/yousuf/10_DATA/Biocelerate_shared_data/data/biocelerate_all_data/1MDogA_send/bw.xpt")
-## bw <- haven::read_xpt("data/mock_SEND_data/instem/bw.xpt")
+bw <- haven::read_xpt("data/mock_SEND_data/instem/bw.xpt")
 # write to csv file
 # read back the file in dataframe
 # attribute (label) lost
@@ -26,7 +25,7 @@ bw <- haven::read_xpt("~/OneDrive - FDA/yousuf/10_DATA/Biocelerate_shared_data/d
 
 # convert to base R dataframe
 bw <- as.data.frame(bw)
-edit(bw)
+## edit(bw)
 # getting a peek at data
 head(bw)
 
@@ -34,7 +33,7 @@ head(bw)
 View(bw)
 # edit()
 # know more about your dataframe/table
-str(bw)
+## str(bw)
 
 print(head(bw$BWSTRESN))
 head(bw$BWSTRESN)
@@ -60,9 +59,10 @@ unq_animals <- unique(bw$USUBJID)
 unq_animals
 length(unq_animals)
 
-# table for a animal
-
-an_animal <- bw[bw$USUBJID=='43066-1101',]
+# table for a animal, pick first one
+one_animal <- bw$USUBJID[1]
+one_animal
+an_animal <- bw[bw$USUBJID==one_animal,]
 View(an_animal)
 
 
@@ -129,9 +129,7 @@ barplot(table(bw$BWTESTCD))
 ## ggplot2::ggplot(data=bw, ggplot2::aes(VISITDY,BWSTRESN, color=VISITDY))+
 ##   ggplot2::geom_point()
 
-dm <- haven::read_xpt("~/OneDrive - FDA/yousuf/10_DATA/Biocelerate_shared_data/data/biocelerate_all_data/1MDogA_send/dm.xpt")
-## dm <- haven::read_xpt("data/mock_SEND_data/instem/dm.xpt")
-## dm <- haven::read_xpt('../../data/PDS/dm.xpt')
+dm <- haven::read_xpt("data/mock_SEND_data/instem/dm.xpt")
 dm  <- as.data.frame(dm)
 head(dm)
 bw_m <- bw[, c('STUDYID','DOMAIN','USUBJID','BWTESTCD',
@@ -145,6 +143,13 @@ head(df_merge)
 #
 
 unique(df_merge$SETCD)
+
+plot(df_merge$BWSTRESN,
+     col = ifelse(df_merge$SEX=='M','skyblue','red'),
+     ## xlab = 'VISITDAY',
+     ylab = 'Body Weight',
+     pch=19,cex = .8)
+legend('bottomright',c('Male','Female'),col = c('skyblue','red'),pch=19)
 # plot BWSTRESN and VISITDY
 plot(df_merge$VISITDY,df_merge$BWSTRESN,
      col = ifelse(df_merge$SEX=='M','skyblue','red'),
