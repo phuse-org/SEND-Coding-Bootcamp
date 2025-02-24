@@ -1,7 +1,7 @@
 # SEND-Coding-Bootcamp
 
 ### Overview 
-The three-day SEND Coding Bootcamp aims to help those work with SEND datasets become more productive by teaching basic coding and plotting skills.
+The four-day SEND Coding Bootcamp aims to help those work with SEND datasets become more productive by teaching basic coding and plotting skills.
 
 Over the course of three seperate hands-on coding workshop, participants will learn the basics of programming and plotting using the R programming language. The course will be oriented around SEND datasets and will including reading, writing, plotting, and manipulating SEND datasets stored in .xpt format.
 
